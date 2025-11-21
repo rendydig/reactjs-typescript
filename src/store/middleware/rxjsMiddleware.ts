@@ -1,4 +1,4 @@
-import { Middleware } from '@reduxjs/toolkit'
+import { Middleware, Dispatch, AnyAction } from '@reduxjs/toolkit'
 import { Subject, interval, of } from 'rxjs'
 import { filter, map, delay, switchMap, take } from 'rxjs/operators'
 import { increment } from '../slices/counterSlice'
@@ -27,7 +27,7 @@ import { fetchUsersSuccess } from '../slices/userSlice'
  */
 
 // Create a subject to handle actions - this is the RxJS stream that all Redux actions flow through
-const action$ = new Subject<{ type: string; payload?: any }>()
+const action$ = new Subject<{ type: string; payload?: unknown }>()
 
 // RxJS Epic: Handle async increment with delay
 action$
@@ -94,14 +94,14 @@ action$
  * In store.ts, add this to configureStore:
  * middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(rxjsMiddleware)
  */
-export const rxjsMiddleware: Middleware & { dispatch?: any } = store => next => action => {
+export const rxjsMiddleware: Middleware & { dispatch?: Dispatch<AnyAction> } = store => next => action => {
   // Store the dispatch function for use in observables
   // This allows RxJS epics to dispatch new actions back to Redux
   rxjsMiddleware.dispatch = store.dispatch
   
   // Push action to the subject for RxJS processing
   // All epics listening to action$ will receive this action
-  action$.next(action as { type: string; payload?: any })
+  action$.next(action as { type: string; payload?: unknown })
   
   // Continue with normal Redux flow
   // This ensures the action still reaches the reducers
