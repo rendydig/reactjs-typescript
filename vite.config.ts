@@ -10,4 +10,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    allowedHosts: [
+      '64cxg2-5173.csb.app',
+      '.csb.app', // Allow all CodeSandbox hosts
+    ],
+  },
 })
