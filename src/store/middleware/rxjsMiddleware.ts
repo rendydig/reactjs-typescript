@@ -52,7 +52,7 @@ export const rxjsMiddleware: Middleware & { dispatch?: any } = store => next => 
   rxjsMiddleware.dispatch = store.dispatch
   
   // Push action to the subject for RxJS processing
-  action$.next(action)
+  action$.next(action as { type: string; payload?: any })
   
   // Continue with normal Redux flow
   return next(action)
